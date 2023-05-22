@@ -20,8 +20,7 @@ namespace WebServerExample
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                webBuilder.UseStartup<Startup>();
-                webBuilder.UseUrls( "http://localhost:44318/");
+                webBuilder.UseStartup<Startup>().UseUrls("https://localhost:44318");
                 });
     }
 }
