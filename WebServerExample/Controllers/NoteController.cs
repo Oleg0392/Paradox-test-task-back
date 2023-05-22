@@ -16,13 +16,18 @@ namespace WebServerExample.Controllers
 
         [HttpGet]
         [Route("api/[controller]")]
-        public JsonResult Index()
+        public JsonResult Get()
         {           
             for (int i = 0; i < notes.Length; i++)
             {
                 notes[i].Raw = "this note written in backend asp.net microservice. #" + i.ToString();
             }
             return Json(notes);
+        }
+
+        public IActionResult Index()
+        {
+            return null;
         }
     }
 }
