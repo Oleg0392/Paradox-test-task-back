@@ -1,33 +1,58 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebServerExample.DataProvider.Interfaces;
+using Microsoft.AspNetCore.Http;
+using System.Web;
 using System;
+using WebServerExample.Models;
+using System.IO.Pipelines;
+using System.Threading.Tasks;
 
 namespace WebServerExample.Controllers
 {
     public class NoteController : Controller
     {
-        Note[] notes =
+        IQueryManager queryManager;
+
+        public NoteController(IQueryManager queryManager)
         {
-            new Note(0,"note1"),
-            new Note(1,"note2"),
-            new Note(2,"note3"),
-            new Note(3,"note4"),
-            new Note(4,"note5")
-        };
+            this.queryManager = queryManager;   
+        }       
 
         [HttpGet]
         [Route("api/[controller]")]
         public JsonResult Get()
-        {           
-            for (int i = 0; i < notes.Length; i++)
+        {
+            Note[] notes = new Note[]     // test data
             {
-                notes[i].Raw = "this note written in backend asp.net microservice. #" + i.ToString();
-            }
+                new Note{NoteID=0,Name="работа",Raw="сделать отчеты"},
+                new Note{NoteID=1,Name="дом",Raw="помочь приготовить ужин"},
+                new Note{NoteID=2,Name="магазин",Raw="не забыть порошок"},
+                new Note{NoteID=3,Name="машина",Raw="оплатить страховку"}
+            };
             return Json(notes);
+        }
+
+        [HttpPost]
+        [Route("api/[controller]")]
+        public OkResult Post()
+        {
+            string bodyRaw = String.Empty;
+            using(Request.BodyReader.AsStream())
+            {
+                bodyRaw = readBody(Request).Result.ToString();
+            }
+            OkResult result = new OkResult();
+            return result;
         }
 
         public IActionResult Index()
         {
             return null;
+        }
+
+        private async Task<ReadResult> readBody(HttpRequest request)
+        {
+            return await request.BodyReader.ReadAsync();
         }
     }
 }
