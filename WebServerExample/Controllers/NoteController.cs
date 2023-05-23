@@ -1,58 +1,35 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebServerExample.DataProvider.Interfaces;
-using Microsoft.AspNetCore.Http;
-using System.Web;
-using System;
 using WebServerExample.Models;
-using System.IO.Pipelines;
-using System.Threading.Tasks;
+using WebServerExample.Data;
 
 namespace WebServerExample.Controllers
 {
     public class NoteController : Controller
     {
-        IQueryManager queryManager;
+        private readonly NoteContext _context;
 
-        public NoteController(IQueryManager queryManager)
+        public NoteController(NoteContext context)
         {
-            this.queryManager = queryManager;   
+            _context = context;   
         }       
 
         [HttpGet]
         [Route("api/[controller]")]
         public JsonResult Get()
         {
-            Note[] notes = new Note[]     // test data
-            {
-                new Note{NoteID=0,Name="работа",Raw="сделать отчеты"},
-                new Note{NoteID=1,Name="дом",Raw="помочь приготовить ужин"},
-                new Note{NoteID=2,Name="магазин",Raw="не забыть порошок"},
-                new Note{NoteID=3,Name="машина",Raw="оплатить страховку"}
-            };
-            return Json(notes);
+            return Json(_context.Notes);
         }
 
         [HttpPost]
         [Route("api/[controller]")]
-        public OkResult Post()
+        public IActionResult Post([FromBody]Note newNote)
         {
-            string bodyRaw = String.Empty;
-            using(Request.BodyReader.AsStream())
-            {
-                bodyRaw = readBody(Request).Result.ToString();
-            }
-            OkResult result = new OkResult();
-            return result;
-        }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        public IActionResult Index()
-        {
-            return null;
-        }
+            newNote.NoteID++;
 
-        private async Task<ReadResult> readBody(HttpRequest request)
-        {
-            return await request.BodyReader.ReadAsync();
+            return Ok(newNote);
         }
     }
 }

@@ -5,6 +5,8 @@ namespace WebServerExample.Data
 {
     public class NoteContext : DbContext
     {
+        public NoteContext(DbContextOptions<NoteContext> options) : base(options) { }
+        
         public DbSet<Note> Notes { get; set; }
         public DbSet<Tag> Tags { get; set; }
 
