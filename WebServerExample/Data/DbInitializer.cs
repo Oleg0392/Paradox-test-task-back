@@ -9,7 +9,6 @@ namespace WebServerExample.Data
         public static void Initialize(NoteContext context)
         {
             context.Database.EnsureCreated();
-
             if (context.Notes.Any())
             {
                 return;   // DB has been seeded
@@ -27,17 +26,7 @@ namespace WebServerExample.Data
                 context.Notes.Add(note);
             }
             context.SaveChanges();
-
-            var tags = new Tag[]
-            {
-                new Tag{TagID=0,Title="срочное"},
-                new Tag{TagID=1,Title="НЕзабыть"}
-            };
-            foreach (Tag tag in tags)
-            {
-                context.Tags.Add(tag);
-            }
-            context.SaveChanges();
+            
         }
     }
 }

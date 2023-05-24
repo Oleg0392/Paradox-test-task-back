@@ -31,6 +31,8 @@ namespace WebServerExample
             //services.AddScoped<DataProvider.Interfaces.IQueryManager, DataProvider.Implemenations.QueryManager>();
             services.AddDbContext<NoteContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<TagContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

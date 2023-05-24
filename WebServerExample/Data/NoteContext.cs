@@ -8,12 +8,11 @@ namespace WebServerExample.Data
         public NoteContext(DbContextOptions<NoteContext> options) : base(options) { }
         
         public DbSet<Note> Notes { get; set; }
-        public DbSet<Tag> Tags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Note>().ToTable("Notes");
-            modelBuilder.Entity<Tag>().ToTable("Tag");
         }
     }
+
 }

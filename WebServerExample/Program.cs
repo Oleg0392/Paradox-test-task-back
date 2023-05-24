@@ -24,8 +24,10 @@ namespace WebServerExample
                 var services = scope.ServiceProvider;
                 try
                 {
-                    var context = services.GetRequiredService<NoteContext>();
-                    DbInitializer.Initialize(context);
+                    var noteContext = services.GetRequiredService<NoteContext>();
+                    var tagContext = services.GetRequiredService<TagContext>();
+                    DbInitializer.Initialize(noteContext);
+                    DbTagInitializer.Initialize(tagContext);
                 }
                 catch (Exception ex)
                 {

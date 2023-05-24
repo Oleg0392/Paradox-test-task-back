@@ -7,9 +7,9 @@ namespace WebServerExample.Controllers
 {
     public class TagController : Controller
     {
-        private readonly NoteContext _context;
+        private readonly TagContext _context;
 
-        public TagController(NoteContext noteContext)
+        public TagController(TagContext noteContext)
         {
             this._context = noteContext;
         }
