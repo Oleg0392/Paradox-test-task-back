@@ -15,19 +15,32 @@ namespace WebServerExample.Controllers
         }       
 
         [HttpGet]
-        [Route("api/[controller]")]
+        [Route("api/get/[controller]")]
         public JsonResult Get()
         {
             return Json(_context.Notes);
         }
 
         [HttpPost]
-        [Route("api/[controller]")]
+        [Route("api/upd/[controller]")]
         public IActionResult Post([FromBody]Note newNote)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            newNote.NoteID++;
+            _context.Notes.Update(newNote);
+            _context.SaveChangesAsync();
+
+            return Ok(newNote);
+        }
+
+        [HttpPost]
+        [Route("api/add/[controller]")]
+        public IActionResult Add([FromBody] Note newNote)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            _context.Notes.Add(newNote);
+            _context.SaveChangesAsync();
 
             return Ok(newNote);
         }

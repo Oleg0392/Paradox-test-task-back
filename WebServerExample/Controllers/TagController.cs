@@ -9,9 +9,9 @@ namespace WebServerExample.Controllers
     {
         private readonly TagContext _context;
 
-        public TagController(TagContext noteContext)
+        public TagController(TagContext context)
         {
-            this._context = noteContext;
+            this._context = context;
         }
 
         [HttpGet]
