@@ -12,7 +12,7 @@ namespace WebServerExample.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Tag>().ToTable("Tags");
+            modelBuilder.Entity<Tag>().ToTable("Tag");
         }
     }
 }
