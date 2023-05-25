@@ -2,6 +2,7 @@
 using WebServerExample.DataProvider.Interfaces;
 using WebServerExample.Models;
 using WebServerExample.Data;
+using System.Linq;
 
 namespace WebServerExample.Controllers
 {
@@ -18,7 +19,7 @@ namespace WebServerExample.Controllers
         [Route("api/get/[controller]")]
         public JsonResult Get()
         {
-            return Json(_context.Notes);
+            return Json(_context.Notes.OrderBy(n => n.NoteID));
         }
 
         [HttpPost]
@@ -43,6 +44,21 @@ namespace WebServerExample.Controllers
             _context.SaveChangesAsync();
 
             return Ok(newNote);
+        }
+
+        [HttpPost]
+        [Route("api/del/[controller]")]
+        public IActionResult Del([FromBody]Note delNote)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(delNote);
+            }
+
+            _context.Remove(delNote);
+            _context.SaveChangesAsync();
+
+            return Ok(delNote);
         }
     }
 }
