@@ -3,6 +3,7 @@ using WebServerExample.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace WebServerExample.Controllers
 {
@@ -24,32 +25,26 @@ namespace WebServerExample.Controllers
 
         [HttpPost]
         [Route("api/add/[controller]")]
-        public IActionResult Add([FromBody]Tag newTag)
+        public async Task<IActionResult> Add([FromBody]Tag newTag)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             _context.Tags.Add(newTag);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-            return Ok(newTag);
+            return Ok();
         }
 
         [HttpPost]
         [Route("api/del/[controller]")]
-        public IActionResult Del([FromBody]Tag delTag)
+        public async Task<IActionResult> Del([FromBody]Tag delTag)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(delTag);
-            }
+            if (!ModelState.IsValid) { return BadRequest(delTag); }
 
             _context.Remove(delTag);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-            return Ok(delTag);
+            return Ok();
         }
     }
 }
