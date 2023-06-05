@@ -11,6 +11,7 @@ namespace WebServerExample.Controllers
     public class NoteController : Controller
     {
         private readonly NoteContext _context;
+        public Note[] localNotes { get; set; }
 
         public NoteController(NoteContext context)
         {
@@ -21,7 +22,9 @@ namespace WebServerExample.Controllers
         [Route("api/get/[controller]")]
         public JsonResult Get()
         {
-            //return Json(repository.GetEntityies());
+            //return Json(repository.GetEntityies
+            if (localNotes != null) { return Json(localNotes.OrderBy(ln => ln.NoteID)); }
+            else { LoadLocalNotes(); }
             return Json(_context.Notes.OrderBy(n => n.NoteID));
         }
 
@@ -32,6 +35,7 @@ namespace WebServerExample.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             _context.Notes.Update(newNote);
+            LoadLocalNotes();
             await _context.SaveChangesAsync();
 
             return Ok();
@@ -44,6 +48,7 @@ namespace WebServerExample.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             _context.Add(newNote);
+            LoadLocalNotes();
             await _context.SaveChangesAsync();
 
             return Ok();
@@ -56,9 +61,21 @@ namespace WebServerExample.Controllers
             if (!ModelState.IsValid) return BadRequest(delNote);
             
             _context.Remove(delNote);
+            LoadLocalNotes();
             await _context.SaveChangesAsync();
 
             return Ok();
+        }
+
+        private void LoadLocalNotes()
+        {
+            int noteIndex = 0;
+            localNotes = new Note[_context.Notes.Count()];
+            foreach (var note in _context.Notes)
+            {
+                localNotes[noteIndex] = note;
+                noteIndex++;
+            }
         }
     }
 }
